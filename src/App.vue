@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import ListOfDays from './components/ListOfDays.vue';
+import DNIInput  from './components/DNIInput.vue';
+import CorrespondeCobro from './components/CorrespondeCobro.vue';
 //logica
 type DiaLaboral = 'Lunes' | 'Martes' | 'Miercoles' | 'Jueves' | 'Viernes';
 
@@ -29,38 +32,28 @@ const correspondeCobro = computed (() => {
 
   return digitoDelDia.includes(ultimoDigito)
 })
+
+const actualizarinput = (dni: string):void => {
+  dniInput.value = dni
+}
 </script>
 
 
 
 <template>
   <!--html va aca -->
-  <div class="min-h-screen bg-slate-50 p-8 flex flex-col items-center">
+  
 
   <H1 class="text-xl font-bolt">Gestor de pagos</H1>
-    <div>
-  <button v-for="dia in dias" :key="dia"  :class="[
-    'px-6 py-2 font-medium rounded-full transition-all duration-200',
-    diaSeleccionado === dia
-    ?'bg-indigo-600 text-white shadow-lg shadow-indigo-200'
-    :'bg-white text-indigo-600 border border-indigo-200 hover:bg-indigo-50'
-  ]" @click="seleccionarDia(dia)">
-    {{ dia }}
-  </button>
-  </div>
-  
-  <div class="w-full max-w-md bg-white p6 rounded-2xl shadow-sm border border-slate-200 mt6">
-    <label class="block text-sm font-semibold text-slate-700 mb-2">Ingrese su DNI</label>
-    <input v-model="dniInput" type="text" placeholder="99999999" maxlength="8"
-    class="w-full p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all"/>
-  </div>
 
-  <div v-if="dniInput" class="mt6">
-    <p v-if="correspondeCobro" class="text-green-600 font-bold text-lg"> ¡Hoy te corresde el pago!    </p>
-    <p v-else class="text-red-500">Hoy no es tu turno de cobro</p>
-  </div>
+    <ListOfDays/>
 
-  </div>
+    <DNIInput @cambio-de-input="actualizarinput"/>
+
+    <CorrespondeCobro
+    :dni-input="dniInput"
+    :corresponde-cobro="correspondeCobro"/>
+
 </template>
 
 <style scoped>
